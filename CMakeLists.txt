@@ -120,8 +120,8 @@ else()
 endif()
 
 option(SPDLOG_PREVENT_CHILD_FD "Prevent from child processes to inherit log file descriptors" OFF)
-option(SPDLOG_NO_THREAD_ID "prevent spdlog from querying the thread id on each log call if thread id is not needed" ON) # OFF ???
-option(SPDLOG_NO_TLS "prevent spdlog from using thread local storage" ON) # OFF ???
+option(SPDLOG_NO_THREAD_ID "prevent spdlog from querying the thread id on each log call if thread id is not needed" OFF) # ???
+option(SPDLOG_NO_TLS "prevent spdlog from using thread local storage" OFF) # ???
 option(
     SPDLOG_NO_ATOMIC_LEVELS
     "prevent spdlog from using of std::atomic log levels (use only if your code never modifies log levels concurrently"
@@ -182,7 +182,7 @@ endif()
 target_compile_definitions(spdlog PUBLIC SPDLOG_COMPILED_LIB)
 target_include_directories(spdlog ${SPDLOG_INCLUDES_LEVEL} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                                   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-#target_link_libraries(spdlog PUBLIC Threads::Threads) # ???
+target_link_libraries(spdlog PUBLIC Threads::Threads) # ???
 spdlog_enable_warnings(spdlog)
 
 set_target_properties(spdlog PROPERTIES VERSION ${SPDLOG_VERSION} SOVERSION
