@@ -59,7 +59,7 @@ endif()
 option(SPDLOG_BUILD_ALL "Build all artifacts" OFF)
 
 # build shared option
-option(SPDLOG_BUILD_SHARED "Build shared library" OFF)
+option(SPDLOG_BUILD_SHARED "Build shared library" ON) # build .so
 
 # precompiled headers option
 option(SPDLOG_ENABLE_PCH "Build static or shared library using precompiled header to speed up compilation time" OFF)
@@ -68,7 +68,7 @@ option(SPDLOG_ENABLE_PCH "Build static or shared library using precompiled heade
 option(SPDLOG_BUILD_PIC "Build position independent code (-fPIC)" OFF)
 
 # example options
-option(SPDLOG_BUILD_EXAMPLE "Build example" ${SPDLOG_MASTER_PROJECT})
+option(SPDLOG_BUILD_EXAMPLE "Build example" OFF)
 option(SPDLOG_BUILD_EXAMPLE_HO "Build header only example" OFF)
 
 # testing options
@@ -143,7 +143,7 @@ if(SPDLOG_BUILD_PIC)
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 endif()
 
-find_package(Threads REQUIRED)
+find_package(Threads REQUIRED) # ???
 message(STATUS "Build type: " ${CMAKE_BUILD_TYPE})
 # ---------------------------------------------------------------------------------------
 # Static/Shared library
@@ -182,7 +182,7 @@ endif()
 target_compile_definitions(spdlog PUBLIC SPDLOG_COMPILED_LIB)
 target_include_directories(spdlog ${SPDLOG_INCLUDES_LEVEL} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>"
                                                                   "$<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>")
-target_link_libraries(spdlog PUBLIC Threads::Threads)
+target_link_libraries(spdlog PUBLIC Threads::Threads) # ???
 spdlog_enable_warnings(spdlog)
 
 set_target_properties(spdlog PROPERTIES VERSION ${SPDLOG_VERSION} SOVERSION
@@ -338,7 +338,7 @@ if(SPDLOG_INSTALL)
     get_target_property(PKG_CONFIG_DEFINES spdlog INTERFACE_COMPILE_DEFINITIONS)
     string(REPLACE ";" " -D" PKG_CONFIG_DEFINES "${PKG_CONFIG_DEFINES}")
     string(CONCAT PKG_CONFIG_DEFINES "-D" "${PKG_CONFIG_DEFINES}")
-    configure_file("cmake/${PROJECT_NAME}.pc.in" "${pkg_config}" @ONLY)
+    configure_file("cmake/${PROJECT_NAME}.pc.in" "${pkg_config}" @ONLY) # here including file without -pthread setting
     install(FILES "${pkg_config}" DESTINATION "${pkgconfig_install_dir}")
 
     # ---------------------------------------------------------------------------------------
