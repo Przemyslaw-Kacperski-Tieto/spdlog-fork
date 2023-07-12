@@ -10,7 +10,7 @@ include(cmake/ide.cmake)
 
 spdlog_extract_version()
 
-project(spdlog VERSION ${SPDLOG_VERSION} LANGUAGES CXX)
+project(spdlog VERSION ${SPDLOG_VERSION}) # remove CXX??? https://gitlab.kitware.com/cmake/cmake/-/issues/21579
 message(STATUS "Build spdlog: ${SPDLOG_VERSION}")
 
 include(GNUInstallDirs)
@@ -338,7 +338,7 @@ if(SPDLOG_INSTALL)
     get_target_property(PKG_CONFIG_DEFINES spdlog INTERFACE_COMPILE_DEFINITIONS)
     string(REPLACE ";" " -D" PKG_CONFIG_DEFINES "${PKG_CONFIG_DEFINES}")
     string(CONCAT PKG_CONFIG_DEFINES "-D" "${PKG_CONFIG_DEFINES}")
-    configure_file("cmake/${PROJECT_NAME}.pc.in" "${pkg_config}" @ONLY) # here including file without -pthread setting
+    configure_file("cmake/${PROJECT_NAME}.pc.in" "${pkg_config}" @ONLY) # here including file with or without -pthread setting
     install(FILES "${pkg_config}" DESTINATION "${pkgconfig_install_dir}")
 
     # ---------------------------------------------------------------------------------------
