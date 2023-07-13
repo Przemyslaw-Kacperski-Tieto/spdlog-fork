@@ -1,6 +1,7 @@
-# Sets the minimum version of CMake required to build the native library.
+
 cmake_minimum_required(VERSION 3.16.1)
 
+# QNX options - comment out when building for common platform or android
 set(CMAKE_C_COMPILER "qcc")
 set(CMAKE_CXX_COMPILER "q++")
 
@@ -8,6 +9,10 @@ set(PLATFORM_ARCH "aarch64le")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O0 -g -Vgcc_nto${PLATFORM_ARCH}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -Vgcc_nto${PLATFORM_ARCH}_cxx")
+
+if(NOT CMAKE_BUILD_TYPE)
+    set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Choose Release or Debug" FORCE)
+endif()
 
 project(spdlog LANGUAGES CXX)
 
@@ -20,14 +25,23 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
-#set(SPDLOG_SRCS spdlog/src/spdlog.cpp spdlog/src/stdout_sinks.cpp spdlog/src/color_sinks.cpp spdlog/src/file_sinks.cpp spdlog/src/async.cpp spdlog/src/cfg.cpp)
-set(SPDLOG_DIR /home/przemek/spdlog-fork)
-set(SPDLOG_SRCS ${SPDLOG_DIR}/src/spdlog.cpp ${SPDLOG_DIR}/src/stdout_sinks.cpp ${SPDLOG_DIR}/src/color_sinks.cpp ${SPDLOG_DIR}/src/file_sinks.cpp ${SPDLOG_DIR}/src/async.cpp ${SPDLOG_DIR}/src/cfg.cpp ${SPDLOG_DIR}/src/bundled_fmtlib_format.cpp)
-#list(APPEND SPDLOG_SRCS spdlog/src/bundled_fmtlib_format.cpp)
+set(SPDLOG_DIR ${CMAKE_CURRENT_LIST_DIR})
+set(SPDLOG_SRCS
+    ${SPDLOG_DIR}/src/spdlog.cpp
+    ${SPDLOG_DIR}/src/stdout_sinks.cpp
+    ${SPDLOG_DIR}/src/color_sinks.cpp
+    ${SPDLOG_DIR}/src/file_sinks.cpp
+    ${SPDLOG_DIR}/src/async.cpp
+    ${SPDLOG_DIR}/src/cfg.cpp
+    ${SPDLOG_DIR}/src/bundled_fmtlib_format.cpp
+)
 
-add_library(spdlog SHARED ${SPDLOG_SRCS} )
-add_definitions( -DSPDLOG_COMPILED_LIB )
-include_directories ( ${SPDLOG_DIR}/include )
+add_library(spdlog
+    SHARED
+    ${SPDLOG_SRCS}
+)
+add_definitions(-DSPDLOG_COMPILED_LIB)
+include_directories (${SPDLOG_DIR}/include)
 
 # # Copyright(c) 2019 spdlog authors Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
